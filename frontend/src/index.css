@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.active hr{
+    @apply block;
+}
+@media(max-width: 740px){
+    .active p{
+        @apply text-white bg-indigo-500
+    }
+}
