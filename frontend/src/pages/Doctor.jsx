@@ -52,6 +52,7 @@ const Doctor = () => {
               }
         </div>
       </div>
+      
     </div>
   )
 }

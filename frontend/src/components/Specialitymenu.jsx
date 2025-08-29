@@ -15,7 +15,6 @@ const Specialitymenu = () => {
             </Link>
           ))}
         </div>
-    
     </div>
   )
 }

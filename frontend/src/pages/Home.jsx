@@ -3,6 +3,7 @@ import Headers from '../components/Header'
 import Specialitymenu from '../components/Specialitymenu'
 import TopDoctors from '../components/TopDoctors'
 import Banner from '../components/Banner'
+import Chatbot from './Chatbot'
 
 const Home = () => {
   return (
@@ -11,6 +12,9 @@ const Home = () => {
         <Specialitymenu/>
         <TopDoctors/>
         <Banner/>
+        <Chatbot/>
+
+        
     </div>
   )
 }

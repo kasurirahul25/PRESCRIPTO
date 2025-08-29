@@ -25,7 +25,7 @@ const About = () => {
       </div>
       <div className='flex flex-col md:flex-row'>
         <div className='border px-10 md:px-16 py-8 sm:py-16 flex flex-col gap-5 text-[15px] hover:bg-indigo-400 hover:text-white transition-all duration-300 text-gray-600 cursor-pointer'>
-          <b>Efficiency</b>
+          <b>  Efficiency</b>
           <p>Streamlined appointment scheduling that fits into your busy lifestyle.</p>
         </div>
         <div className='border px-10 md:px-16 py-8 sm:py-16 flex flex-col gap-5 text-[15px] hover:bg-indigo-400 hover:text-white transition-all duration-300 text-gray-600 cursor-pointer'>
