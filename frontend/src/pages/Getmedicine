@@ -1,0 +1,590 @@
+import React, { useState } from "react";
+import Chatbot from "./Chatbot";
+import { FiRotateCw, FiMenu } from "react-icons/fi";
+import { MdOutlinePalette } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
+
+const steps = ["Info", "Symptoms", "Conditions", "Details", "Treatment"];
+
+const Getmedicine = () => {
+  const [step, setStep] = useState(0);
+  const [formData, setFormData] = useState({
+    age: "",
+    gender: "",
+    symptoms: [],
+    conditions: "",
+    details: "",
+    treatment: "",
+  });
+  const [symptomInput, setSymptomInput] = useState("");
+  const [bodyView, setBodyView] = useState("front");
+  const [skinDropdownOpen, setSkinDropdownOpen] = useState(false);
+  const [selectedSkinSymptoms, setSelectedSkinSymptoms] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("All");
+
+  // Sample skin-related diseases
+  const skinDiseases = [
+    "Bruise",
+    "Bruise easily",
+    "Bump(s) in ring shape in one area",
+    "Coarse hair",
+    "Crusty bump(s) limited to scalp",
+    "Darkened skin",
+    "Dry cracked skin between fingers",
+    "Dry scalp",
+    "Dry scaly thick skin",
+    "Early grey hair",
+    "Flaky bump(s) limited to elbows or knees",
+    "Flat, light brown pigmented birthmarks",
+    "Hair dryness",
+    "Hair sparse",
+  ];
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const addSymptom = (symptom = "") => {
+    const newSymptom = symptom || symptomInput;
+    if (newSymptom.trim() !== "") {
+      setFormData({
+        ...formData,
+        symptoms: [...formData.symptoms, newSymptom],
+      });
+      setSymptomInput("");
+    }
+  };
+
+  const addSelectedSkinSymptoms = () => {
+    const updated = [
+      ...formData.symptoms,
+      ...selectedSkinSymptoms.filter((s) => !formData.symptoms.includes(s)),
+    ];
+    setFormData({ ...formData, symptoms: updated });
+    setSkinDropdownOpen(false);
+    setSelectedSkinSymptoms([]);
+  };
+
+  const removeSymptom = (index) => {
+    const updated = [...formData.symptoms];
+    updated.splice(index, 1);
+    setFormData({ ...formData, symptoms: updated });
+  };
+
+  const toggleSkinSymptom = (symptom) => {
+    if (selectedSkinSymptoms.includes(symptom)) {
+      setSelectedSkinSymptoms(
+        selectedSkinSymptoms.filter((s) => s !== symptom)
+      );
+    } else {
+      setSelectedSkinSymptoms([...selectedSkinSymptoms, symptom]);
+    }
+  };
+
+  const nextStep = () => {
+    if (step < steps.length - 1) setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    if (step > 0) setStep(step - 1);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Submitted Data:", formData);
+    // alert("Form submitted! Check console for data.");
+  };
+
+  const toggleRotate = () => {
+    setBodyView((prev) => (prev === "front" ? "back" : "front"));
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4 relative overflow-hidden">
+      {/* Progress Tabs */}
+     <div className="flex space-x-6 mb-10 w-full max-w-5xl justify-center">
+  {steps.map((label, index) => (
+    <div
+      key={index}
+      className={`pb-2 text-sm font-medium cursor-pointer ${
+        step === index
+          ? "text-blue-600 border-b-2 border-blue-600"
+          : "text-gray-500"
+      }`}
+      onClick={() => setStep(index)} // optional: allows clicking to change step
+    >
+      {label.toUpperCase()}
+    </div>
+  ))}
+</div>
+
+
+      {/* Form Card */}
+      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-5xl">
+        <form onSubmit={handleSubmit}>
+          {/* Step 1: Info */}
+          {step === 0 && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                Enter Basic Information
+              </h2>
+              <div className="flex flex-col md:flex-row gap-6">
+
+                <div>
+                  <label className="block text-gray-700 mb-2">NAME</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Enter your name"
+                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 mb-2">Age</label>
+                  <input
+                    type="number"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleChange}
+                    placeholder="Enter your age"
+                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">Gender</label>
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, gender: "Male" })
+                      }
+                      className={`px-6 py-2 rounded-lg ${
+                        formData.gender === "Male"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      Male
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, gender: "Female" })
+                      }
+                      className={`px-6 py-2 rounded-lg ${
+                        formData.gender === "Female"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      Female
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Symptoms */}
+          {step === 1 && (
+            <div className="flex flex-col md:flex-row gap-8">
+              {/* Left Side - Symptoms Input */}
+              <div className="flex-1">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                  What are your symptoms?
+                </h2>
+                <div className="flex w-full gap-2 mb-4">
+                  <input
+                    type="text"
+                    value={symptomInput}
+                    onChange={(e) => setSymptomInput(e.target.value)}
+                    placeholder="Type your main symptom here"
+                    className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => addSymptom()}
+                    className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Add
+                  </button>
+                </div>
+
+                {/* Symptom List */}
+                <div className="border rounded-lg p-4 min-h-[200px] flex items-center justify-center text-gray-500">
+                  {formData.symptoms.length === 0 ? (
+                    <p>No symptoms added</p>
+                  ) : (
+                    <ul className="w-full space-y-2">
+                      {formData.symptoms.map((symptom, index) => (
+                        <li
+                          key={index}
+                          className="flex justify-between items-center bg-gray-100 px-3 py-2 rounded-lg"
+                        >
+                          {symptom}
+                          <button
+                            type="button"
+                            onClick={() => removeSymptom(index)}
+                            className="text-red-500 hover:text-red-700 text-sm"
+                          >
+                            ✕
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Side - Body Image with Controls */}
+              <div className="w-1/3 flex justify-center items-start relative">
+                <img
+                  src={
+                    bodyView === "front"
+                      ? "https://img.lb.wbmdstatic.com/vim/live/webmd/consumer_assets/site_images/symptom_checker_beta/assets/front-m.png"
+                      : "https://img.lb.wbmdstatic.com/vim/live/webmd/consumer_assets/site_images/symptom_checker_beta/assets/back-m.png"
+                  }
+                  alt="Body Map"
+                  className="w-52 h-auto transition-transform duration-500"
+                />
+                {/* Floating Buttons */}
+                <div className="absolute right-[-40px] top-8 flex flex-col gap-3">
+                  {/* Rotate */}
+                  <button
+                    type="button"
+                    onClick={toggleRotate}
+                    className="p-2 border rounded-lg text-gray-600 hover:bg-gray-100 flex items-center justify-center"
+                  >
+                    <FiRotateCw size={18} />
+                  </button>
+
+                  {/* Menu */}
+                  <button
+                    type="button"
+                    className="p-2 border rounded-lg text-gray-600 hover:bg-gray-100 flex items-center justify-center"
+                  >
+                    <FiMenu size={18} />
+                  </button>
+
+                  {/* Skin Sidebar */}
+                  <button
+                    type="button"
+                    onClick={() => setSkinDropdownOpen(true)}
+                    className="p-2 border rounded-lg text-gray-600 hover:bg-gray-100 flex items-center justify-center"
+                  >
+                    <p>SKIN</p>
+                    {/* <MdOutlinePalette size={18} /> */}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Conditions */}
+{step === 2 && (
+  <div>
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+      Existing Conditions
+    </h2>
+
+    <div className="border rounded-lg shadow-sm bg-white">
+      <ul className="divide-y divide-gray-200">
+        {["Diabetes", "Hypertension", "Asthma", "Heart Disease", "Arthritis", "None"].map(
+          (condition, idx) => {
+            const isSelected = formData.conditions.includes(condition);
+
+            return (
+              <li
+                key={idx}
+                onClick={() => {
+                  let updatedConditions = [...formData.conditions];
+                  if (isSelected) {
+                    updatedConditions = updatedConditions.filter((c) => c !== condition);
+                  } else {
+                    updatedConditions.push(condition);
+                  }
+                  setFormData({ ...formData, conditions: updatedConditions });
+                }}
+                className={`
+                  px-4 py-3 cursor-pointer transition-colors
+                  ${isSelected ? "bg-indigo-200 font-semibold" : "bg-white"}
+                  hover:bg-indigo-50
+                `}
+              >
+                {condition}
+              </li>
+            );
+          }
+        )}
+      </ul>
+    </div>
+  </div>
+)}
+
+
+
+          {/* Step 4: Details */}
+          {step === 3 && (
+  <div>
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+      More Details
+    </h2>
+
+    {/* Weight */}
+    <div className="mb-4">
+      <label className="block text-gray-700 font-medium mb-1">Weight (kg)</label>
+      <input
+        type="text"
+        name="weight"
+        value={formData.weight}
+        onChange={handleChange}
+        placeholder="Enter weight in kg"
+        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    {/* Height */}
+    <div className="mb-4">
+      <label className="block text-gray-700 font-medium mb-1">Height (cm)</label>
+      <input
+        type="text"
+        name="height"
+        value={formData.height}
+        onChange={handleChange}
+        placeholder="Enter height in cm"
+        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    {/* Blood Pressure */}
+    <div className="mb-4">
+      <label className="block text-gray-700 font-medium mb-1">Blood Pressure</label>
+      <input
+        type="text"
+        name="bloodPressure"
+        value={formData.bloodPressure}
+        onChange={handleChange}
+        placeholder="e.g. 120/80"
+        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  </div>
+)}
+
+ 
+          {/* Step 5: Treatment */}
+{step === 4 && (
+  <div className="flex flex-col items-center">
+    <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+      PRESCRIPTION
+    </h2>
+
+    {/* A4 Prescription Page */}
+    <div
+      id="prescription"
+      className="bg-white shadow-lg border w-[794px] h-[1123px] p-10 relative"
+    >
+      {/* Hospital Header */}
+      <div className="text-center border-b pb-4 mb-6">
+        <h1 className="text-3xl font-bold text-blue-700">
+          GOVERNMENT HOSPITAL
+        </h1>
+        <p className="text-gray-700">Dr. Ajay Kumar (MBBS, MD)</p>
+        <p className="text-gray-500">Phone: +91 9182506690</p>
+      </div>
+
+      {/* Patient Info */}
+      <div className="mb-6 grid grid-cols-2 gap-y-2 gap-x-8 text-gray-800">
+        <div className="flex">
+          <span className="font-semibold w-28">Name:</span>
+          <span>{formData.name || "_____________________"}</span>
+        </div>
+
+        <div className="flex">
+          <span className="font-semibold w-28">Age:</span>
+          <span>{formData.age || "_____________________"}</span>
+        </div>
+
+        <div className="flex">
+          <span className="font-semibold w-28">Weight:</span>
+          <span>{formData.weight || "_____________________"}</span>
+        </div>
+
+        <div className="flex">
+          <span className="font-semibold w-28">Gender:</span>
+          <span>{formData.gender || "_____________________"}</span>
+        </div>
+
+        <div className="flex col-span-2">
+          <span className="font-semibold w-28">Address:</span>
+          <span>{formData.address || "_____________________"}</span>
+        </div>
+      </div>
+
+      {/* Prescription Box */}
+      <div className="border-t border-b py-8 mb-6 min-h-[700px]">
+        {/* <h2 className="text-xl font-semibold mb-2">Prescription:</h2> */}
+        {/* <p className="text-gray-400 italic">Medicines will appear here...</p> */}
+      </div>
+
+      {/* Signature + Date pinned to bottom-right */}
+      <div className="absolute bottom-10 right-10 text-right">
+        <p className="font-semibold">Doctor’s Signature</p>
+        {/* <p className="text-gray-400">__________________</p> */}
+
+        <div className="mt-4">
+          <span className="font-semibold">Date:</span>{" "}
+          <span>{new Date().toLocaleDateString()}</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Print Button */}
+    <button
+      onClick={() => {
+        const printContent = document.getElementById("prescription").innerHTML;
+        const originalContent = document.body.innerHTML;
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+        window.location.reload(); // reload to restore UI
+      }}
+      className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+    >
+      Print Prescription
+    </button>
+  </div>
+)}
+
+
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between mt-8">
+            {step > 0 && (
+              <button
+                type="button"
+                onClick={prevStep}
+                className="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+              >
+                Previous
+              </button>
+            )}
+            {step < steps.length - 1 ? (
+              <button
+                type="button"
+                onClick={nextStep}
+                className="ml-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Continue →
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="ml-auto px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              >
+                Submit
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+
+      {/* Slide-in Skin Symptoms Sidebar */}
+      {skinDropdownOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-40 flex">
+          <div className="bg-white w-90 h-full shadow-lg p-6 relative overflow-y-auto">
+            {/* Close button */}
+            <button
+              onClick={() => setSkinDropdownOpen(false)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+            >
+              <IoClose size={24} />
+            </button>
+
+            <h2 className="text-xl font-semibold mb-4">Skin Symptoms</h2>
+
+            {/* Search */}
+            <input
+              type="text"
+              placeholder="Search all skin symptoms"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg mb-4 focus:ring-2 focus:ring-blue-500"
+            />
+
+            {/* Tabs */}
+            <div className="flex border-b mb-4">
+              {["All", "Common"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`flex-1 pb-2 ${
+                    activeTab === tab
+                      ? "border-b-2 border-blue-500 text-blue-600"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            {/* List */}
+            <div className="min-w-[30rem] max-w-3xl"> 
+              <ul className="divide-y divide-gray-200 border rounded-lg bg-white shadow-lg w-full">
+                {skinDiseases
+                  .filter((d) =>
+                    d.toLowerCase().includes(searchQuery.toLowerCase())
+                  )
+                  .map((disease, idx) => {
+                    const isSelected = selectedSkinSymptoms.includes(disease);
+                    return (
+                      <li
+                        key={idx}
+                        onClick={() => toggleSkinSymptom(disease)}
+                        className={`
+                          px-4 py-3 cursor-pointer transition-colors whitespace-nowrap
+                          ${isSelected ? "bg-indigo-200 font-semibold" : "bg-white"}
+                          hover:bg-indigo-50
+                        `}
+                      >
+                        {disease}
+                      </li>
+                    );
+                  })}
+              </ul>
+            </div>
+
+            {/* Add Button */}
+            <button
+              onClick={addSelectedSkinSymptoms}
+              className="w-full mt-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Add Symptom
+            </button>
+          </div>
+
+          {/* Click outside to close */}
+          <div
+            className="flex-1"
+            onClick={() => setSkinDropdownOpen(false)}
+          ></div>
+        </div>
+      )}
+
+      {/* Chatbot in bottom-right */}
+      <div className="fixed bottom-6 right-6">
+        <Chatbot />
+      </div>
+    </div>
+  );
+};
+
+export default Getmedicine;
