@@ -37,7 +37,7 @@ const Fotter = () => {
 
       <div>
         <hr/>
-        <p className='py-5 text-sm text-center text-gray-500'>Copyright 2023@ prescripto - All Righted Reserverd.</p>
+        <p className='py-5 text-sm text-center text-gray-500'>Copyright 2025@ prescripto - All Righted Reserverd.</p>
       </div>
     </div>
   )

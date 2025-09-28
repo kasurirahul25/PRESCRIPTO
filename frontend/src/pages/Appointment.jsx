@@ -79,7 +79,7 @@ const Appointment = () => {
     <div>
       <div className='flex felx-col gap-4'>
         <div>
-          <img  className='bg-indigo-400 w-full sm:max-w-72 rounded-lg' src={docInfo.image} alt="" />
+          <img  className='bg-gray-600 w-full sm:max-w-72 rounded-lg' src={docInfo.image} alt="" />
         </div>
         <div className='flex-1 border border-gray-400 rounded-lg p-8 py-7 bg-white mx-2 sm:mx-0 mt-[-80px] sm:mt-0'>
             <p className='flex items-center gap-2 text-2xl font-medium text-gray-900'>
@@ -105,7 +105,7 @@ const Appointment = () => {
         <p>Booking Slots</p>
         <div className='flex gap-3 items-center w-full overflow-x-scroll mt-4'>
           {docSlots.length && docSlots.map((item,index)=>(
-            <div onClick={()=> setSlotIndex(index)} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex=== index ? 'bg-indigo-500 text-white' : 'border border-gray-100'}`} key = {index}>
+            <div onClick={()=> setSlotIndex(index)} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex=== index ? 'bg-gray-600 text-white' : 'border border-gray-100'}`} key = {index}>
                 <p>{item[0] && daysOfWeek[item[0].datetime.getDay()]}</p>
                 <p>{item[0] && item[0].datetime.getDate()}</p>
             </div>
@@ -114,7 +114,7 @@ const Appointment = () => {
 
         <div className='flex items-center gap-3 w-full overflow-x-scroll mt-4'>
           {docSlots.length && docSlots[slotIndex].map((item,index)=>(
-            <p onClick={()=>setSlotTime(item.time)} className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time == slotTime ? 'bg-indigo-500 text-white': 'text-gray-400 border border-gray-300'}`} key={index}>
+            <p onClick={()=>setSlotTime(item.time)} className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time == slotTime ? 'bg-gray-600 text-white': 'text-gray-400 border border-gray-300'}`} key={index}>
               {item.time.toLowerCase()}
             </p>
           ))}
@@ -123,7 +123,7 @@ const Appointment = () => {
           <p> &nbsp;</p>
         </div>
         <div>
-          <button className='bg-indigo-500 text-white text-sm font-light px-14 py-3 rounded-full'> Book an Appointment</button>
+          <button className='bg-green-600 text-white text-sm font-light px-14 py-3 rounded-full'> Book an Appointment</button>
         </div>
 
 
